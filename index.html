@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Залученість користувачів і схильність до покупки</title>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--ink:#1c2733;--mute:#5b6773;--line:#d9dfe5;--bar:#3a6ea5;--ref:#c2410c;--warn-bg:#fdf1d8;--warn:#7a4b00}
+@media (prefers-color-scheme:dark){:root{--bg:#12181f;--card:#1a222b;--ink:#e8edf2;--mute:#9aa7b4;--line:#2e3a46;--bar:#6fa3d8;--ref:#fb923c;--warn-bg:#3a2d12;--warn:#f3cf86}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:max(16px,env(safe-area-inset-top)) 16px 40px}
+.wrap{max-width:1120px;margin:0 auto}
+h1{font-size:1.7rem;line-height:1.25;margin:8px 0 6px}
+h2{font-size:1.05rem;margin:0 0 6px}
+p{margin:0 0 8px}.mute{color:var(--mute)}
+.note{display:inline-block;background:var(--warn-bg);color:var(--warn);padding:4px 10px;border-radius:6px;font-size:.88rem;margin-top:6px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:20px 0}
+.kpi,.card,.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.kpi b{display:block;font-size:1.8rem;line-height:1.2}
+.how{margin:0 0 14px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+.filters button{font:inherit;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 16px;cursor:pointer}
+.filters button[aria-pressed=true]{background:var(--bar);border-color:var(--bar);color:#fff}
+button:focus-visible{outline:3px solid var(--ref);outline-offset:2px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.card[hidden]{display:none}
+.badge{display:inline-block;background:var(--warn-bg);color:var(--warn);font-size:.85rem;padding:2px 10px;border-radius:999px;margin:0 0 8px}
+.chart{position:relative;height:190px;margin:18px 0 0 34px;border-left:1px solid var(--line);border-bottom:1px solid var(--line)}
+.grid{position:absolute;left:0;right:0;border-top:1px dashed var(--line)}
+.grid span{position:absolute;left:-34px;top:-.7em;font-size:.75rem;color:var(--mute)}
+.ref{position:absolute;left:0;right:0;border-top:2px dashed var(--ref);z-index:2}
+.ref span{position:absolute;right:0;bottom:2px;font-size:.75rem;font-weight:600;color:var(--ref);background:var(--card);padding:0 4px}
+.bars{position:absolute;inset:0;display:flex;justify-content:space-around;align-items:flex-end;padding:0 6px}
+.col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;padding:0 5px}
+.bar{width:100%;max-width:64px;background:var(--bar);border-radius:4px 4px 0 0;position:relative}
+.bar i{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-style:normal;font-size:.82rem;font-weight:600;white-space:nowrap;padding-bottom:2px}
+.cats{display:flex;margin:6px 0 14px 34px;padding:0 6px}
+.cats div{flex:1;text-align:center;font-size:.78rem;line-height:1.3;padding:0 3px}
+.cats small{display:block;color:var(--mute)}
+ul{margin:6px 0 0;padding-left:20px}li{margin-bottom:4px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:16px}
+footer{margin-top:24px;font-size:.85rem;color:var(--mute)}
+@media (max-width:480px){h1{font-size:1.4rem}.bar i{font-size:.7rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>Чи пов’язана залученість користувачів зі схильністю до покупки?</h1>
+<p class="mute">Аналіз вибірки з 500 користувачів. Показники залученості подано як відносні індекси від 0 до 1, а не як реальні кліки чи хвилини.</p>
+<span class="note">Дані, імовірно, синтетичні</span>
+</header>
+
+<section class="kpis" aria-label="Ключові показники">
+<div class="kpi"><b>500</b>користувачів у вибірці</div>
+<div class="kpi"><b>50,2%</b>мають позначку «схильність до покупки» (251 з 500)</div>
+<div class="kpi"><b>0 із 3</b>гіпотез підтверджено</div>
+</section>
+
+<p class="how mute"><strong>Як читати графіки:</strong> кожен стовпчик показує частку користувачів із позначкою «схильність до покупки» в групі. Пунктирна лінія — середній показник по всіх: 50,2%. Якщо стовпчики приблизно на рівні лінії, групи між собою не відрізняються.</p>
+
+<div class="filters" role="group" aria-label="Фільтр гіпотез">
+<button type="button" data-f="all" aria-pressed="true">Усі</button>
+<button type="button" data-f="H1" aria-pressed="false">H1</button>
+<button type="button" data-f="H2" aria-pressed="false">H2</button>
+<button type="button" data-f="H3" aria-pressed="false">H3</button>
+</div>
+
+<section class="cards" id="cards"></section>
+
+<section class="box" style="margin-top:16px">
+<h2>Загальний висновок</h2>
+<p>У цій вибірці зв’язку між схильністю до покупки та рівнем залученості, залученістю до реклами чи часом на платформі не виявлено. Це не доводить, що такого зв’язку не існує взагалі. Це означає, що в цих даних його не видно.</p>
+</section>
+
+<div class="row">
+<section class="box">
+<h2>Обмеження</h2>
+<ul>
+<li>Вибірка невелика (500 користувачів): у групах по 100–180 людей випадкові коливання можуть становити кілька відсотків, тому слабкі зв’язки ми помітити не можемо.</li>
+<li>Дані, імовірно, синтетичні, тому результати не варто переносити на реальну аудиторію.</li>
+<li>Показники залученості та часу — відносні індекси від 0 до 1, а не реальні кліки чи хвилини.</li>
+<li>«Схильність до покупки» — позначка в даних, а не підтверджена покупка.</li>
+<li>Це порівняння груп, а не доказ того, що одне впливає на інше.</li>
+<li>Даних про витрати та дохід немає, тому окупність кампаній не оцінювалась.</li>
+</ul>
+</section>
+<section class="box">
+<h2>Практичні рекомендації</h2>
+<ul>
+<li>Не будувати сегменти й не обирати аудиторію за цими трьома показниками на основі лише цієї вибірки.</li>
+<li>Повторити аналіз на реальних даних більшого обсягу з реальними одиницями (кліки, хвилини).</li>
+<li>Щоб оцінювати окупність кампаній, зібрати дані про витрати та дохід за кожною кампанією.</li>
+<li>Якщо потрібно перевірити, чи змінює реклама поведінку, провести контрольований тест (наприклад, A/B-тест).</li>
+</ul>
+</section>
+</div>
+
+<footer>«Схильність до покупки» — це поле Purchase_Likelihood.</footer>
+</div>
+
+<script>
+const REF = 50.2;
+const H = [
+ {id:"H1", title:"Високий рівень залученості пов’язаний з більшою схильністю до покупки",
+  data:[["Низька",160,85,"53,1"],["Середня",164,78,"47,6"],["Висока",176,88,"50,0"]],
+  why:["У групі з високою залученістю частка (50,0%) не вища, ніж у групі з низькою (53,1%).","Частка не зростає разом із залученістю: найвища вона у «Низькій», найнижча у «Середній».","Усі три групи близькі до середнього по вибірці (50,2%)."]},
+ {id:"H2", title:"Вища залученість до реклами пов’язана з більшою схильністю до покупки",
+  data:[["1 (найнижча)",135,64,"47,4"],["2",117,60,"51,3"],["3",134,64,"47,8"],["4 (найвища)",114,63,"55,3"]],
+  why:["Найвища група справді має більшу частку, ніж найнижча (55,3% проти 47,4%), але ця різниця не підтверджується іншими групами.","Друга та третя групи не вибудовують зростання: 51,3% і 47,8%.","Такі відмінності трапляються й випадково в групах розміром 100–140 людей, тому на їх основі не можна робити висновок."]},
+ {id:"H3", title:"Більше часу на платформі пов’язане з більшою схильністю до покупки",
+  data:[["1 (найменше)",125,63,"50,4"],["2",125,64,"51,2"],["3",125,60,"48,0"],["4 (найбільше)",125,64,"51,2"]],
+  why:["Усі чотири групи лежать у вузькому діапазоні 48,0–51,2%.","Група з найбільшим часом (51,2%) не відрізняється від групи з найменшим (50,4%).","Тенденції до зростання немає."]}
+];
+const num = s => parseFloat(s.replace(",","."));
+const box = document.getElementById("cards");
+box.innerHTML = H.map(h => {
+  const grid = [0,50,100].map(v => `<div class="grid" style="bottom:${v}%"><span>${v}%</span></div>`).join("");
+  const bars = h.data.map(d => `<div class="col"><div class="bar" style="height:${num(d[3])}%"><i>${d[3]}%</i></div></div>`).join("");
+  const cats = h.data.map(d => `<div>${d[0]}<small>${d[2]} з ${d[1]}</small></div>`).join("");
+  return `<article class="card" data-h="${h.id}">
+<span class="badge">${h.id} · Не підтверджено</span>
+<h2>${h.title}</h2>
+<p class="mute">У цій вибірці зв’язок не виявлено.</p>
+<div class="chart" role="img" aria-label="Частка користувачів із позначкою за групами">${grid}<div class="ref" style="bottom:${REF}%"><span>Усі: 50,2%</span></div><div class="bars">${bars}</div></div>
+<div class="cats">${cats}</div>
+<strong>Чому не підтверджено:</strong>
+<ul>${h.why.map(w => `<li>${w}</li>`).join("")}</ul>
+</article>`;
+}).join("");
+document.querySelectorAll(".filters button").forEach(b => b.addEventListener("click", () => {
+  const f = b.dataset.f;
+  document.querySelectorAll(".filters button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  document.querySelectorAll(".card").forEach(c => c.hidden = !(f === "all" || c.dataset.h === f));
+}));
+</script>
+</body>
+</html>
