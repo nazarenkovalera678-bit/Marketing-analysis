@@ -53,4 +53,4 @@ marketing-engagement-analysis/
 ```
 
 ## Запуск
-Відкрийте `index.html` у браузері. За бажанням увімкніть GitHub Pages (Settings → Pages → гілка `main`, коренева папка).
+Відкрийте `https://nazarenkovalera678-bit.github.io/Marketing-analysis/` у браузері. За бажанням увімкніть GitHub Pages (Settings → Pages → гілка `main`, коренева папка).
